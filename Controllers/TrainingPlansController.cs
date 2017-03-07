@@ -16,9 +16,11 @@ namespace Source.Controllers
             _trainingPlanService = trainingPlanService;
         }
 
+        [HttpGet]
         public IEnumerable<string> Get() => _trainingPlanService.GetAll().Select(x => x.Name);
 
         [Route("{name}")]
+        [HttpGet]
         public TrainingPlan Get(string name) => _trainingPlanService.Get(name);
     }
 }

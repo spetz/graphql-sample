@@ -8,6 +8,6 @@ namespace Source.Core.Services
     {
          IEnumerable<UserTrainingPlan> GetAll();
          UserTrainingPlan Get(Guid id);   
-         void Create(string name, DateTime startDate);
+         UserTrainingPlan Create(string name, DateTime startDate);
     }
 }

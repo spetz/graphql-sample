@@ -42,7 +42,10 @@ namespace Graphql.Api
             services.AddSingleton<IDocumentWriter>(new DocumentWriter(true));
             services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
             services.AddSingleton<StarWarsSchema>(x => new StarWarsSchema(type => (GraphType) x.GetService(type)));
+            services.AddSingleton<IExerciseService,ExerciseService>();
             services.AddSingleton<ITrainingPlanService,TrainingPlanService>();
+            services.AddSingleton<IUserTrainingPlanService,UserTrainingPlanService>();
+            services.AddSingleton<IDatabase,Database>();
             services.AddMvc()
                     .AddJsonOptions(x => 
                     {

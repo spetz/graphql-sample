@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Http;
@@ -10,6 +8,7 @@ using GraphQL.Types;
 using GraphQL.Validation.Complexity;
 using Microsoft.AspNetCore.Mvc;
 using Graphql.Api.Core.Schemas;
+using Source.Queries;
 
 namespace Graphql.Api.Controllers
 {
@@ -19,7 +18,6 @@ namespace Graphql.Api.Controllers
         private readonly ISchema _schema;
         private readonly IDocumentExecuter _executer;
         private readonly IDocumentWriter _writer;
-        private readonly IDictionary<string, string> _namedQueries;
 
         public GraphQLController(
             IDocumentExecuter executer,
@@ -29,11 +27,6 @@ namespace Graphql.Api.Controllers
             _executer = executer;
             _writer = writer;
             _schema = schema;
-
-            _namedQueries = new Dictionary<string, string>
-            {
-                ["a-query"] = @"query foo { hero { name } }"
-            };
         }
 
         [HttpGet]
@@ -47,12 +40,6 @@ namespace Graphql.Api.Controllers
         {
             var inputs = query.Variables.ToInputs();
             var queryToExecute = query.Query;
-
-            if (!string.IsNullOrWhiteSpace(query.NamedQuery))
-            {
-                queryToExecute = _namedQueries[query.NamedQuery];
-            }
-            
             var result = await _executer.ExecuteAsync(x =>
             {
                 x.Schema = _schema;
@@ -61,27 +48,14 @@ namespace Graphql.Api.Controllers
                 x.Inputs = inputs;
                 x.ComplexityConfiguration = new ComplexityConfiguration { MaxDepth = 15 };
                 x.FieldMiddleware.Use<InstrumentFieldsMiddleware>();
-
             }).ConfigureAwait(false);
 
             var httpResult = result.Errors?.Count > 0
                 ? HttpStatusCode.BadRequest
                 : HttpStatusCode.OK;
-
             var json = _writer.Write(result);
-
-            var response = new HttpResponseMessage();
-            response.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
             return json;
         }
-    }
-
-    public class GraphQLQuery
-    {
-        public string OperationName { get; set; }
-        public string NamedQuery { get; set; }
-        public string Query { get; set; }
-        public string Variables { get; set; }
     }
 }

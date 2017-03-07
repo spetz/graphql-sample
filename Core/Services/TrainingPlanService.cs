@@ -8,21 +8,31 @@ namespace Source.Core.Services
     public class TrainingPlanService : ITrainingPlanService
     {
         private static readonly Random Random = new Random();
-        private static readonly string[] Exercises = new []{"back squat", "front squat", "deadlift", 
-            "bench press", "military press", "snatch", "clean", "barbell row", "pull up", "barbell row", "dips"};
-        private static readonly IList<TrainingPlan> Plans = new List<TrainingPlan>
+        private readonly IDatabase _database;
+
+        public TrainingPlanService(IDatabase database)
         {
-            CreatePlan("stronglifts", 30, 2),
-            CreatePlan("smolov jr", 12, 3),
-            CreatePlan("5x5", 20, 2)
-        };
+            _database = database;
+            AddPlans();
+        }
+
+        private void AddPlans()
+        {
+            if(_database.TrainingPlans.Any())
+            {
+                return;
+            }
+            _database.TrainingPlans.Add(CreatePlan("stronglifts", 30, 2));
+            _database.TrainingPlans.Add(CreatePlan("smolov jr", 12, 3));
+            _database.TrainingPlans.Add(CreatePlan("5x5", 20, 2));
+        }
 
         public TrainingPlan Get(string name)
             => GetAll().FirstOrDefault(x => x.Name.ToLowerInvariant() == name.Trim().ToLowerInvariant());
 
-        public IEnumerable<TrainingPlan> GetAll() => Plans;
+        public IEnumerable<TrainingPlan> GetAll() => _database.TrainingPlans;
 
-        private static TrainingPlan CreatePlan(string name, int weeks, int daysBreak)
+        private TrainingPlan CreatePlan(string name, int weeks, int daysBreak)
         {
             var plan = new TrainingPlan
             {
@@ -37,7 +47,7 @@ namespace Source.Core.Services
             return plan;
         }
 
-        private static TrainingWeek CreateWeek(int number, int daysBreak)
+        private TrainingWeek CreateWeek(int number, int daysBreak)
         {
             var week = new TrainingWeek
             {
@@ -58,7 +68,7 @@ namespace Source.Core.Services
             return week;
         }
 
-        private static TrainingDay CreateDay(int dayOfWeek)
+        private TrainingDay CreateDay(int dayOfWeek)
         {
             var name = dayOfWeek == 7 ? 
                 DayOfWeek.Sunday.ToString() : 
@@ -75,7 +85,7 @@ namespace Source.Core.Services
             return day;
         }
 
-        private static TrainingSession CreateSession(string name, int number)
+        private TrainingSession CreateSession(string name, int number)
         {
             var session = new TrainingSession
             {
@@ -90,7 +100,7 @@ namespace Source.Core.Services
             {
                 while(string.IsNullOrWhiteSpace(exercise) || addedExercises.Contains(exercise))
                 {
-                    exercise = Exercises[Random.Next(0, Exercises.Length - 1)];
+                    exercise = _database.Exercises.ElementAt(Random.Next(0, _database.Exercises.Count - 1));
                 }
                 addedExercises.Add(exercise);
                 session.Exercises.Add(CreateExercise(exercise, i));
@@ -99,7 +109,7 @@ namespace Source.Core.Services
             return session;
         }
 
-        private static Exercise CreateExercise(string name, int number)
+        private Exercise CreateExercise(string name, int number)
         {
             var exercise = new Exercise
             {
@@ -116,7 +126,7 @@ namespace Source.Core.Services
             return exercise;
         }
 
-        private static ExerciseSet CreateExerciseSet(int number, int repetitions, double load)
+        private ExerciseSet CreateExerciseSet(int number, int repetitions, double load)
         {
             var set = new ExerciseSet
             {
