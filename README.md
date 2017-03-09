@@ -16,7 +16,7 @@ Open the web browser passing URL [localhost:5000](localhost:5000) and you shall 
 
 ## Sample query:
 
-```json
+```
 query ($name: String!, $withSets: Boolean!){
   plan(name: $name) {
     name,
