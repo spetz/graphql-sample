@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Source.Core.Services
+namespace Graphql.Api.Core.Services
 {
     public class ExerciseService : IExerciseService
     {

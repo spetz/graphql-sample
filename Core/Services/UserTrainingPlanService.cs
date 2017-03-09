@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Source.Core.Models;
+using Graphql.Api.Core.Models;
 
-namespace Source.Core.Services
+namespace Graphql.Api.Core.Services
 {
     public class UserTrainingPlanService : IUserTrainingPlanService
     {

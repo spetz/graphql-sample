@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Graphql.Api.Core.Models;
 using GraphQL;
 
-namespace Source.Core.Repositories
+namespace Graphql.Api.Core.Repositories
 {
     public class StarWarsRepository
     {

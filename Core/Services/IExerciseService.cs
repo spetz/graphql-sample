@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace Source.Core.Services
+namespace Graphql.Api.Core.Services
 {
     public interface IExerciseService
     {
-         IEnumerable<string> GetAll();
-         void Create(string exercise);
+        IEnumerable<string> GetAll();
+        void Create(string exercise);
     }
 }

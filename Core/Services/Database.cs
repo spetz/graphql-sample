@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Source.Core.Models;
+using Graphql.Api.Core.Models;
 
-namespace Source.Core.Services
+namespace Graphql.Api.Core.Services
 {
     public class Database : IDatabase
     {

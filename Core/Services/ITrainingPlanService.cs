@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using Source.Core.Models;
+using Graphql.Api.Core.Models;
 
-namespace Source.Core.Services
+namespace Graphql.Api.Core.Services
 {
     public interface ITrainingPlanService
     {
-         IEnumerable<TrainingPlan> GetAll();
-         TrainingPlan Get(string name);
+        TrainingPlan Get(string name);
+        IEnumerable<TrainingPlan> GetAll();
+        TrainingPlan Create(string name, int weeks, int daysBreak);
     }
 }

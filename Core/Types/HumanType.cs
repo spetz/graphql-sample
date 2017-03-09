@@ -1,6 +1,6 @@
 using GraphQL.Types;
 using Graphql.Api.Core.Models;
-using Source.Core.Repositories;
+using Graphql.Api.Core.Repositories;
 
 namespace Graphql.Api.Core.Types
 {

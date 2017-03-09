@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Source.Core.Models
+namespace Graphql.Api.Core.Models
 {
     public class UserTrainingPlan
     {

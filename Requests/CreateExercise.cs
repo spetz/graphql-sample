@@ -1,4 +1,4 @@
-namespace Source.Requests
+namespace Graphql.Api.Requests
 {
     public class CreateExercise
     {

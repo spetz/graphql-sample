@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Source.Core.Models;
-using Source.Requests;
-using Source.Core.Services;
+using Graphql.Api.Core.Models;
+using Graphql.Api.Requests;
+using Graphql.Api.Core.Services;
 
-namespace Source.Controllers
+namespace Graphql.Api.Controllers
 {
     [Route("user-training-plans")]
     public class UserTrainingPlansController : Controller

@@ -1,4 +1,4 @@
-namespace Source.Queries
+namespace Graphql.Api.Queries
 {
     public class GraphQLQuery
     {

@@ -8,7 +8,7 @@ using GraphQL.Types;
 using GraphQL.Validation.Complexity;
 using Microsoft.AspNetCore.Mvc;
 using Graphql.Api.Core.Schemas;
-using Source.Queries;
+using Graphql.Api.Queries;
 
 namespace Graphql.Api.Controllers
 {
@@ -22,17 +22,11 @@ namespace Graphql.Api.Controllers
         public GraphQLController(
             IDocumentExecuter executer,
             IDocumentWriter writer,
-            StarWarsSchema schema)
+            TrainingPlanSchema schema)
         {
             _executer = executer;
             _writer = writer;
             _schema = schema;
-        }
-
-        [HttpGet]
-        public Task<object> GetAsync(HttpRequestMessage request)
-        {
-            return PostAsync(request, new GraphQLQuery { Query = "query foo { hero }", Variables = "" });
         }
 
         [HttpPost]

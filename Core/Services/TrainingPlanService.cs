@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Source.Core.Models;
+using Graphql.Api.Core.Models;
 
-namespace Source.Core.Services
+namespace Graphql.Api.Core.Services
 {
     public class TrainingPlanService : ITrainingPlanService
     {
@@ -13,18 +13,6 @@ namespace Source.Core.Services
         public TrainingPlanService(IDatabase database)
         {
             _database = database;
-            AddPlans();
-        }
-
-        private void AddPlans()
-        {
-            if(_database.TrainingPlans.Any())
-            {
-                return;
-            }
-            _database.TrainingPlans.Add(CreatePlan("stronglifts", 30, 2));
-            _database.TrainingPlans.Add(CreatePlan("smolov jr", 12, 3));
-            _database.TrainingPlans.Add(CreatePlan("5x5", 20, 2));
         }
 
         public TrainingPlan Get(string name)
@@ -32,10 +20,11 @@ namespace Source.Core.Services
 
         public IEnumerable<TrainingPlan> GetAll() => _database.TrainingPlans;
 
-        private TrainingPlan CreatePlan(string name, int weeks, int daysBreak)
+        public TrainingPlan Create(string name, int weeks, int daysBreak)
         {
             var plan = new TrainingPlan
             {
+                Id = Guid.NewGuid(),
                 Name = name,
                 Weeks = new List<TrainingWeek>()
             };
@@ -43,6 +32,7 @@ namespace Source.Core.Services
             {
                 plan.Weeks.Add(CreateWeek(i, daysBreak));
             }
+            _database.TrainingPlans.Add(plan);
 
             return plan;
         }
@@ -51,6 +41,7 @@ namespace Source.Core.Services
         {
             var week = new TrainingWeek
             {
+                Id = Guid.NewGuid(),
                 Number = number,
                 Days = new List<TrainingDay>()
             };
@@ -76,6 +67,7 @@ namespace Source.Core.Services
 
             var day = new TrainingDay
             {
+                Id = Guid.NewGuid(),
                 Name = name,
                 DayOfWeek = dayOfWeek,
                 Sessions = new List<TrainingSession>()
@@ -89,6 +81,7 @@ namespace Source.Core.Services
         {
             var session = new TrainingSession
             {
+                Id = Guid.NewGuid(),
                 Name = name,
                 Number = number,
                 Exercises = new List<Exercise>()
@@ -113,6 +106,7 @@ namespace Source.Core.Services
         {
             var exercise = new Exercise
             {
+                Id = Guid.NewGuid(),
                 Name = name,
                 Number = number,
                 Sets = new List<ExerciseSet>()
@@ -130,6 +124,7 @@ namespace Source.Core.Services
         {
             var set = new ExerciseSet
             {
+                Id = Guid.NewGuid(),
                 Number = number,
                 Repetitions = repetitions,
                 Load = load

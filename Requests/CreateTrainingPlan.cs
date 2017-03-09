@@ -1,6 +1,6 @@
 using System;
 
-namespace Source.Requests
+namespace Graphql.Api.Requests
 {
     public class CreateTrainingPlan
     {

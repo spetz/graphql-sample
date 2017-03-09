@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Source.Core.Services;
-using Source.Requests;
+using Graphql.Api.Core.Services;
+using Graphql.Api.Requests;
 
-namespace Source.Controllers
+namespace Graphql.Api.Controllers
 {
     [Route("exercises")]
     public class ExercisesController : Controller

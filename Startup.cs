@@ -1,5 +1,4 @@
 using Graphql.Api.Core.Schemas;
-using Graphql.Api.Core.Types;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Types;
@@ -11,8 +10,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Source.Core.Repositories;
-using Source.Core.Services;
+using Graphql.Api.Core.Services;
+using Graphql.Api.Core.Types;
 
 namespace Graphql.Api
 {
@@ -32,20 +31,15 @@ namespace Graphql.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<StarWarsQuery>();
-            services.AddSingleton<StarWarsMutation>();
-            services.AddScoped<HumanType>();
-            services.AddScoped<DroidType>();
-            services.AddScoped<CharacterInterface>();
-            services.AddSingleton<StarWarsSchema>();
-            services.AddSingleton<StarWarsRepository>();
             services.AddSingleton<IDocumentWriter>(new DocumentWriter(true));
             services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
-            services.AddSingleton<StarWarsSchema>(x => new StarWarsSchema(type => (GraphType) x.GetService(type)));
             services.AddSingleton<IExerciseService,ExerciseService>();
             services.AddSingleton<ITrainingPlanService,TrainingPlanService>();
+            services.AddSingleton<ITrainingPlanGraphQLService,TrainingPlanGraphQLService>();
             services.AddSingleton<IUserTrainingPlanService,UserTrainingPlanService>();
             services.AddSingleton<IDatabase,Database>();
+            services.AddSingleton<IDatabaseSeeder,DatabaseSeeder>();
+            ConfigureTypes(services);
             services.AddMvc()
                     .AddJsonOptions(x => 
                     {
@@ -63,10 +57,29 @@ namespace Graphql.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            SeedDatabase(app.ApplicationServices.GetService<IDatabaseSeeder>());
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             app.UseStaticFiles();
             app.UseMvc();
+        }
+
+        private void ConfigureTypes(IServiceCollection services)
+        {
+            services.AddSingleton<TrainingPlanType>();
+            services.AddSingleton<TrainingWeekType>();
+            services.AddSingleton<TrainingDayType>();
+            services.AddSingleton<TrainingSessionType>();
+            services.AddSingleton<ExerciseType>();
+            services.AddSingleton<ExerciseSetType>();
+            services.AddSingleton<TrainingPlanQuery>();
+            services.AddSingleton<TrainingPlanMutation>();
+            services.AddSingleton<TrainingPlanSchema>(x => new TrainingPlanSchema(type => (GraphType) x.GetService(type)));
+        }
+
+        private void SeedDatabase(IDatabaseSeeder databaseSeeder)
+        {
+            databaseSeeder.Seed();
         }
     }
 }
