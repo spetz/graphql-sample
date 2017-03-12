@@ -6,13 +6,13 @@ Clone the repository and execute in the terminal following commands:
 
 ```
 npm install
-npm install yarn - g
+npm install yarn -g
 yarn start
 dotnet restore
 dotnet run
 ```
 
-Open the web browser and navigate to the URL: [localhost:5000](localhost:5000) and you shall see the GraphiQL UI :).
+Open the web browser and navigate to the URL: [http://localhost:5000](http://localhost:5000) and you shall see the GraphiQL UI :).
 
 ## Sample query:
 
