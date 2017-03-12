@@ -52,3 +52,44 @@ query ($name: String!, $withSets: Boolean!){
   "withSets": true
 }
 ```
+
+
+## Sample mutation
+
+```
+mutation ($name: String!, $weeks: Int! $daysBreak: Int!){
+  createPlan(name: $name, weeks: $weeks, daysBreak: $daysBreak) {
+    name,
+    weeks {
+      number,
+      days {
+        name,
+      	dayOfWeek,
+        sessions {
+          name,
+          number,
+          exercises {
+            name
+            number,
+            sets {
+              number,
+              load,
+              repetitions
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Variables
+
+```
+{
+	"name": "custom",
+  "weeks": 4,
+  "daysBreak": 2
+}
+```

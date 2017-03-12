@@ -31,15 +31,48 @@ namespace Graphql.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureAppServices(services);
+            ConfigureSchema(services);
+            ConfigureMvc(services);
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            SeedDatabase(app.ApplicationServices.GetService<IDatabaseSeeder>());
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+            app.UseStaticFiles();
+            app.UseMvc();
+        }
+
+        private void ConfigureAppServices(IServiceCollection services)
+        {
             services.AddSingleton<IDocumentWriter>(new DocumentWriter(true));
             services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
             services.AddSingleton<IExerciseService,ExerciseService>();
             services.AddSingleton<ITrainingPlanService,TrainingPlanService>();
             services.AddSingleton<ITrainingPlanGraphQLService,TrainingPlanGraphQLService>();
             services.AddSingleton<IUserTrainingPlanService,UserTrainingPlanService>();
+            services.AddSingleton<IGraphQLProcessor,GraphQLProcessor>();
             services.AddSingleton<IDatabase,Database>();
             services.AddSingleton<IDatabaseSeeder,DatabaseSeeder>();
-            ConfigureTypes(services);
+        }
+
+        private void ConfigureSchema(IServiceCollection services)
+        {
+            services.AddSingleton<TrainingPlanType>();
+            services.AddSingleton<TrainingWeekType>();
+            services.AddSingleton<TrainingDayType>();
+            services.AddSingleton<TrainingSessionType>();
+            services.AddSingleton<ExerciseType>();
+            services.AddSingleton<ExerciseSetType>();
+            services.AddSingleton<TrainingPlanQuery>();
+            services.AddSingleton<TrainingPlanMutation>();
+            services.AddSingleton<TrainingPlanSchema>(x => new TrainingPlanSchema(type => (GraphType) x.GetService(type)));
+        }
+
+        private void ConfigureMvc(IServiceCollection services)
+        {
             services.AddMvc()
                     .AddJsonOptions(x => 
                     {
@@ -53,29 +86,7 @@ namespace Graphql.Api
                             CamelCaseText = true
                         });
                     });;;
-        }
-
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            SeedDatabase(app.ApplicationServices.GetService<IDatabaseSeeder>());
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            app.UseStaticFiles();
-            app.UseMvc();
-        }
-
-        private void ConfigureTypes(IServiceCollection services)
-        {
-            services.AddSingleton<TrainingPlanType>();
-            services.AddSingleton<TrainingWeekType>();
-            services.AddSingleton<TrainingDayType>();
-            services.AddSingleton<TrainingSessionType>();
-            services.AddSingleton<ExerciseType>();
-            services.AddSingleton<ExerciseSetType>();
-            services.AddSingleton<TrainingPlanQuery>();
-            services.AddSingleton<TrainingPlanMutation>();
-            services.AddSingleton<TrainingPlanSchema>(x => new TrainingPlanSchema(type => (GraphType) x.GetService(type)));
-        }
+        }    
 
         private void SeedDatabase(IDatabaseSeeder databaseSeeder)
         {

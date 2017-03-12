@@ -1,55 +1,22 @@
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using GraphQL;
-using GraphQL.Http;
-using GraphQL.Instrumentation;
-using GraphQL.Types;
-using GraphQL.Validation.Complexity;
 using Microsoft.AspNetCore.Mvc;
-using Graphql.Api.Core.Schemas;
 using Graphql.Api.Queries;
+using Graphql.Api.Core.Services;
 
 namespace Graphql.Api.Controllers
 {
     [Route("graphql")]
     public class GraphQLController : Controller
     {
-        private readonly ISchema _schema;
-        private readonly IDocumentExecuter _executer;
-        private readonly IDocumentWriter _writer;
+        private readonly IGraphQLProcessor _processor;
 
-        public GraphQLController(
-            IDocumentExecuter executer,
-            IDocumentWriter writer,
-            TrainingPlanSchema schema)
+        public GraphQLController(IGraphQLProcessor processor)
         {
-            _executer = executer;
-            _writer = writer;
-            _schema = schema;
+            _processor = processor;
         }
 
         [HttpPost]
-        public async Task<object> PostAsync(HttpRequestMessage request, [FromBody]GraphQLQuery query)
-        {
-            var inputs = query.Variables.ToInputs();
-            var queryToExecute = query.Query;
-            var result = await _executer.ExecuteAsync(x =>
-            {
-                x.Schema = _schema;
-                x.Query = queryToExecute;
-                x.OperationName = query.OperationName;
-                x.Inputs = inputs;
-                x.ComplexityConfiguration = new ComplexityConfiguration { MaxDepth = 15 };
-                x.FieldMiddleware.Use<InstrumentFieldsMiddleware>();
-            }).ConfigureAwait(false);
-
-            var httpResult = result.Errors?.Count > 0
-                ? HttpStatusCode.BadRequest
-                : HttpStatusCode.OK;
-            var json = _writer.Write(result);
-
-            return json;
-        }
+        public async Task<object> PostAsync([FromBody]GraphQLQuery query)
+            => await _processor.ProcessAsync(query);
     }
 }

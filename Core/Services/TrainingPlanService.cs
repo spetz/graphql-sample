@@ -22,6 +22,12 @@ namespace Graphql.Api.Core.Services
 
         public TrainingPlan Create(string name, int weeks, int daysBreak)
         {
+            var existingPlan = Get(name);
+            if(existingPlan != null)
+            {
+                throw new Exception($"There is already training plan with name: '{name}'.");
+            }
+
             var plan = new TrainingPlan
             {
                 Id = Guid.NewGuid(),
