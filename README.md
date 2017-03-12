@@ -12,7 +12,7 @@ dotnet restore
 dotnet run
 ```
 
-Open the web browser passing URL [localhost:5000](localhost:5000) and you shall see the GraphiQL component :).
+Open the web browser and navigate to the URL: [localhost:5000](localhost:5000) and you shall see the GraphiQL UI :).
 
 ## Sample query:
 
@@ -88,7 +88,7 @@ mutation ($name: String!, $weeks: Int! $daysBreak: Int!){
 
 ```
 {
-	"name": "custom",
+  "name": "custom",
   "weeks": 4,
   "daysBreak": 2
 }
