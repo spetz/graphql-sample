@@ -1,11 +1,10 @@
 using GraphQL.Types;
 using Graphql.Api.Core.Types;
 using Graphql.Api.Core.Services;
-using Graphql.Api.Core.Models;
 
 namespace Graphql.Api.Core.Schemas
 {
-    public class TrainingPlanMutation : ObjectGraphType<object>
+    public class TrainingPlanMutation : ObjectGraphType<TrainingPlanType>
     {
         public TrainingPlanMutation(ITrainingPlanService trainingPlanService)
         {

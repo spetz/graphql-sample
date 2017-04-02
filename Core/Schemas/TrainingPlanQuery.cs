@@ -8,7 +8,6 @@ namespace Graphql.Api.Core.Schemas
     {
         public TrainingPlanQuery(ITrainingPlanService trainingPlanService)
         {
-            Name = "TrainingPlanQuery";
             Field<ListGraphType<TrainingPlanType>>(
                 "plans",
                 resolve: context => trainingPlanService.GetAll()

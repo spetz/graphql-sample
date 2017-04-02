@@ -19,15 +19,16 @@ namespace Graphql.Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<object> Get() => _trainingPlanService.GetAll()
-            .Select(x => new {Id = x.Id, Name = x.Name});
+        public IEnumerable<object> Get() 
+            => _trainingPlanService.GetAll()
+                .Select(x => new {Id = x.Id, Name = x.Name});
 
         [Route("{id}")]
         [HttpGet]
         public UserTrainingPlan Get(Guid id) => _trainingPlanService.Get(id);
 
         [HttpPost]
-        public IActionResult Post([FromBody]CreateTrainingPlan request)
+        public IActionResult Post([FromBody]CreateUserTrainingPlan request)
         {
             var startDate = request.StartDate.GetValueOrDefault(DateTime.UtcNow);
             var plan = _trainingPlanService.Create(request.Name, startDate);
